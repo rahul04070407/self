@@ -20,6 +20,7 @@ export class EmisComponent implements OnInit {
   selectedYear = new Date().getFullYear();
   years: number[] = [];
   showYearMenu = false;
+  categories = ['Rana Bike', 'Rahul Bike', 'Education', 'Car Loan', 'Home Loan', 'Personal Loan', 'Other'];
 
   newEMI: EMI = {
     name: '',
@@ -28,7 +29,7 @@ export class EmisComponent implements OnInit {
     startDate: new Date(),
     durationMonths: 12,
     paidMonths: 0,
-    category: 'Loan'
+    category: this.categories[0]
   };
 
   constructor(
@@ -131,6 +132,6 @@ export class EmisComponent implements OnInit {
   }
 
   resetForm() {
-    this.newEMI = { name: '', totalAmount: 0, monthlyAmount: 0, startDate: new Date(), durationMonths: 12, paidMonths: 0, category: 'Loan' };
+    this.newEMI = { name: '', totalAmount: 0, monthlyAmount: 0, startDate: new Date(), durationMonths: 12, paidMonths: 0, category: this.categories[0] };
   }
 }
