@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { DbService } from '../../core/services/db.service';
 import { Transaction } from '../../core/models/finance.model';
 import { AddTransactionComponent } from '../add-transaction/add-transaction.component';
+import Swal from 'sweetalert2';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-transactions',
@@ -24,7 +26,10 @@ export class TransactionsComponent implements OnInit {
     'home medicine', 'home work', 'other'
   ];
 
-  constructor(private db: DbService) { }
+  constructor(
+    private db: DbService,
+    private toastr: ToastrService
+  ) { }
 
   async ngOnInit() {
     await this.loadTransactions();
@@ -42,9 +47,24 @@ export class TransactionsComponent implements OnInit {
   }
 
   async deleteTransaction(id: number | undefined) {
-    if (id && confirm('Delete this record?')) {
+    if (!id) return;
+
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: "This transaction will be permanently deleted!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#6366f1',
+      cancelButtonColor: '#ef4444',
+      confirmButtonText: 'Yes, delete it!',
+      background: '#1e293b',
+      color: '#f8fafc'
+    });
+
+    if (result.isConfirmed) {
       await this.db.deleteTransaction(id);
       await this.loadTransactions();
+      this.toastr.success('Transaction deleted successfully');
     }
   }
 
@@ -58,10 +78,30 @@ export class TransactionsComponent implements OnInit {
       await this.db.updateTransaction({ ...this.editingTransaction });
       this.editingTransaction = null;
       await this.loadTransactions();
+      this.toastr.success('Transaction updated successfully');
     }
   }
 
   cancelEdit() {
     this.editingTransaction = null;
+  }
+
+  onTransactionAdded() {
+    this.loadTransactions();
+    this.showAddForm = false;
+    this.toastr.success('New transaction added!');
+  }
+
+  getCategoryIcon(category: string): string {
+    const cat = category.toLowerCase();
+    if (cat.includes('salary')) return 'bi-cash-stack';
+    if (cat.includes('fuel')) return 'bi-fuel-pump-fill';
+    if (cat.includes('food')) return 'bi-egg-fried';
+    if (cat.includes('medicine')) return 'bi-capsule';
+    if (cat.includes('emi') || cat.includes('card')) return 'bi-credit-card-2-front-fill';
+    if (cat.includes('home')) return 'bi-house-fill';
+    if (cat.includes('tution')) return 'bi-book-fill';
+    if (cat.includes('car')) return 'bi-car-front-fill';
+    return 'bi-dot';
   }
 }

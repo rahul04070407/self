@@ -11,7 +11,7 @@
 
     <!-- Add Mode -->
     <div class="form-section if" *ngIf="showAddForm">
-        <app-add-transaction (transactionAdded)="loadTransactions(); showAddForm = false"></app-add-transaction>
+        <app-add-transaction (transactionAdded)="onTransactionAdded()"></app-add-transaction>
     </div>
 
     <!-- Edit Mode with Category Chips -->
@@ -58,6 +58,9 @@
         <div class="transaction-history">
             <div *ngFor="let t of transactions" class="glass-card transaction-card" [ngClass]="t.type">
                 <div class="t-main">
+                    <div class="t-category-icon" [ngClass]="t.type">
+                        <i class="bi" [ngClass]="getCategoryIcon(t.category)"></i>
+                    </div>
                     <div class="t-info">
                         <div class="t-header-row">
                             <span class="t-badge">{{ t.category }}</span>

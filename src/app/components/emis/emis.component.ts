@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DbService } from '../../core/services/db.service';
 import { EMI } from '../../core/models/finance.model';
+import Swal from 'sweetalert2';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-emis',
@@ -29,7 +31,10 @@ export class EmisComponent implements OnInit {
     category: 'Loan'
   };
 
-  constructor(private db: DbService) { }
+  constructor(
+    private db: DbService,
+    private toastr: ToastrService
+  ) { }
 
   async ngOnInit() {
     this.generateYears();
@@ -68,6 +73,7 @@ export class EmisComponent implements OnInit {
       this.resetForm();
       await this.loadEMIs();
       this.showAddForm = false;
+      this.toastr.success('New EMI plan created!');
     }
   }
 
@@ -81,13 +87,29 @@ export class EmisComponent implements OnInit {
       await this.db.updateEMI(this.editingEMI);
       this.editingEMI = null;
       await this.loadEMIs();
+      this.toastr.success('EMI plan updated');
     }
   }
 
   async deleteEMI(id: number | undefined) {
-    if (id && confirm('Delete this EMI?')) {
+    if (!id) return;
+
+    const result = await Swal.fire({
+      title: 'Remove EMI Plan?',
+      text: "All progress data for this EMI will be lost!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#6366f1',
+      cancelButtonColor: '#ef4444',
+      confirmButtonText: 'Yes, remove it!',
+      background: '#1e293b',
+      color: '#f8fafc'
+    });
+
+    if (result.isConfirmed) {
       await this.db.deleteEMI(id);
       await this.loadEMIs();
+      this.toastr.success('EMI plan removed');
     }
   }
 
@@ -96,6 +118,7 @@ export class EmisComponent implements OnInit {
     if (emi.id) {
       await this.db.updateEMIProgress(emi.id, newVal);
       await this.loadEMIs();
+      if (change > 0) this.toastr.info('EMI payment logged!');
     }
   }
 

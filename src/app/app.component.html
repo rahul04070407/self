@@ -2,10 +2,10 @@
   <!-- Mobile Header -->
   <header class="mobile-header" *ngIf="auth.isLoggedIn()">
     <div class="logo-sm">
-      <img src="logo.png" alt="Logo">
+      <img src="assets/logo.png" alt="Logo">
       <span class="text-gradient">FinFlow</span>
     </div>
-    <button class="logout-btn" (click)="auth.logout()">
+    <button class="logout-btn" (click)="logout()">
       <i class="bi bi-box-arrow-right"></i>
     </button>
   </header>

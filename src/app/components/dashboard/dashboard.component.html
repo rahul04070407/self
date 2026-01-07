@@ -93,7 +93,7 @@
                 <div class="transaction-list">
                     <div *ngFor="let t of getRecentTransactions()" class="transaction-item">
                         <div class="t-icon" [ngClass]="t.type">
-                            <i class="bi" [ngClass]="t.type === 'income' ? 'bi-link-45deg' : 'bi-dash-lg'"></i>
+                            <i class="bi" [ngClass]="getCategoryIcon(t.category)"></i>
                         </div>
                         <div class="t-details">
                             <span class="t-category">{{ t.category }}</span>

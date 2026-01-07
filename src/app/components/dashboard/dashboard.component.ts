@@ -204,4 +204,17 @@ export class DashboardComponent implements OnInit {
       .filter(t => new Date(t.date).getFullYear() === Number(this.selectedYear))
       .slice(0, 5);
   }
+
+  getCategoryIcon(category: string): string {
+    const cat = category.toLowerCase();
+    if (cat.includes('salary')) return 'bi-cash-stack';
+    if (cat.includes('fuel')) return 'bi-fuel-pump-fill';
+    if (cat.includes('food')) return 'bi-egg-fried';
+    if (cat.includes('medicine')) return 'bi-capsule';
+    if (cat.includes('emi') || cat.includes('card')) return 'bi-credit-card-2-front-fill';
+    if (cat.includes('home')) return 'bi-house-fill';
+    if (cat.includes('tution')) return 'bi-book-fill';
+    if (cat.includes('car')) return 'bi-car-front-fill';
+    return 'bi-dot';
+  }
 }
