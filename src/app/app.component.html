@@ -1,0 +1,39 @@
+<div class="app-container" [class.authenticated]="auth.isLoggedIn()">
+  <!-- Mobile Header -->
+  <header class="mobile-header" *ngIf="auth.isLoggedIn()">
+    <div class="logo-sm">
+      <img src="logo.png" alt="Logo">
+      <span class="text-gradient">FinFlow</span>
+    </div>
+    <button class="logout-btn" (click)="auth.logout()">
+      <i class="bi bi-box-arrow-right"></i>
+    </button>
+  </header>
+
+  <!-- Sidebar (Desktop) -->
+  <app-sidebar class="sidebar-area" *ngIf="auth.isLoggedIn()"></app-sidebar>
+
+  <main class="content-area" [class.full-width]="!auth.isLoggedIn()">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Mobile Footer Navigation -->
+  <nav class="mobile-footer-nav" *ngIf="auth.isLoggedIn()">
+    <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+      <i class="bi bi-house-door-fill"></i>
+      <span>Home</span>
+    </a>
+    <a routerLink="/transactions" routerLinkActive="active" class="nav-item">
+      <i class="bi bi-list-task"></i>
+      <span>History</span>
+    </a>
+    <a routerLink="/emis" routerLinkActive="active" class="nav-item">
+      <i class="bi bi-credit-card-fill"></i>
+      <span>EMI</span>
+    </a>
+    <a routerLink="/reports" routerLinkActive="active" class="nav-item">
+      <i class="bi bi-pie-chart-fill"></i>
+      <span>Stats</span>
+    </a>
+  </nav>
+</div>

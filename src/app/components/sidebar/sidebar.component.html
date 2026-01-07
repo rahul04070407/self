@@ -1,0 +1,38 @@
+<div class="sidebar glass-card">
+    <div class="logo">
+        <img src="logo.png" alt="FinFlow Logo" class="logo-img">
+        <h1 class="text-gradient">FinFlow</h1>
+    </div>
+
+    <nav>
+        <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+            <i class="bi bi-grid-1x2-fill"></i>
+            <span>Dashboard</span>
+        </a>
+        <a routerLink="/transactions" routerLinkActive="active" class="nav-item">
+            <i class="bi bi-arrow-up-right-circle-fill"></i>
+            <span>Transactions</span>
+        </a>
+        <a routerLink="/emis" routerLinkActive="active" class="nav-item">
+            <i class="bi bi-credit-card-2-back-fill"></i>
+            <span>EMI Tracker</span>
+        </a>
+        <a routerLink="/reports" routerLinkActive="active" class="nav-item">
+            <i class="bi bi-bar-chart-line-fill"></i>
+            <span>Reports</span>
+        </a>
+    </nav>
+
+    <div class="footer">
+        <div class="user-card">
+            <div class="avatar">R</div>
+            <div class="info">
+                <span class="name">Rahul</span>
+                <span class="status">Online</span>
+            </div>
+            <button class="btn-icon logout" (click)="auth.logout()">
+                <i class="bi bi-box-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+</div>

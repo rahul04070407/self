@@ -1,0 +1,87 @@
+<div class="page-container">
+    <header class="page-header">
+        <h2 class="text-gradient">Transaction History</h2>
+        <div class="header-actions">
+            <button class="btn-primary" (click)="showAddForm = !showAddForm; editingTransaction = null">
+                <i class="bi" [class.bi-x-lg]="showAddForm" [class.bi-plus-lg]="!showAddForm"></i>
+                {{ showAddForm ? 'Cancel' : 'Add New' }}
+            </button>
+        </div>
+    </header>
+
+    <!-- Add Mode -->
+    <div class="form-section if" *ngIf="showAddForm">
+        <app-add-transaction (transactionAdded)="loadTransactions(); showAddForm = false"></app-add-transaction>
+    </div>
+
+    <!-- Edit Mode with Category Chips -->
+    <div class="form-section if" *ngIf="editingTransaction">
+        <div class="glass-card form-card edit-card animated-slide-up">
+            <div class="card-title">
+                <i class="bi bi-pencil-square"></i>
+                <h3>Edit Entry</h3>
+            </div>
+
+            <div class="form-group cat-group">
+                <label>Category</label>
+                <div class="category-chips">
+                    <button type="button" *ngFor="let cat of currentCategories" class="chip"
+                        [class.selected]="editingTransaction.category === cat"
+                        (click)="editingTransaction.category = cat">
+                        {{ cat }}
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Amount</label>
+                    <div class="input-wrapper">
+                        <span class="currency">₹</span>
+                        <input type="number" [(ngModel)]="editingTransaction.amount">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Note</label>
+                    <input type="text" [(ngModel)]="editingTransaction.note" placeholder="Note...">
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn-primary" (click)="saveEdit()">Save Changes</button>
+                <button class="btn-secondary" (click)="cancelEdit()">Discard</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="list-section">
+        <div class="transaction-history">
+            <div *ngFor="let t of transactions" class="glass-card transaction-card" [ngClass]="t.type">
+                <div class="t-main">
+                    <div class="t-info">
+                        <div class="t-header-row">
+                            <span class="t-badge">{{ t.category }}</span>
+                            <span class="t-date">{{ t.date | date:'MMM d, y' }}</span>
+                        </div>
+                        <p class="t-note" *ngIf="t.note">{{ t.note }}</p>
+                    </div>
+                    <div class="t-amount" [ngClass]="t.type">
+                        {{ t.type === 'income' ? '+' : '-' }}{{ t.amount | currency:'INR':'symbol':'1.0-0' }}
+                    </div>
+                </div>
+                <div class="t-actions">
+                    <button class="btn-icon edit" (click)="$event.stopPropagation(); startEdit(t)">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn-icon delete" (click)="$event.stopPropagation(); deleteTransaction(t.id)">
+                        <i class="bi bi-trash3"></i>
+                    </button>
+                </div>
+            </div>
+            <div *ngIf="transactions.length === 0" class="empty-state">
+                <i class="bi bi-journal-x" style="font-size: 3rem; opacity: 0.2; margin-bottom: 1rem;"></i>
+                <p>No transactions recorded yet.</p>
+            </div>
+        </div>
+    </div>
+</div>

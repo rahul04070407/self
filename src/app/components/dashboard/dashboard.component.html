@@ -1,0 +1,110 @@
+<div class="dashboard-container">
+    <header class="dashboard-header">
+        <div class="header-main">
+            <h2 class="text-gradient">Financial Hub</h2>
+            <p class="text-muted">Analyzing <strong>{{ currentViewDate() | date:'MMMM yyyy' }}</strong></p>
+        </div>
+
+        <div class="header-actions">
+            <div class="custom-selector" (mouseleave)="showYearMenu = false">
+                <button class="selector-trigger" (click)="showYearMenu = !showYearMenu">
+                    {{ selectedYear }} Analysis <i class="bi bi-chevron-down"></i>
+                </button>
+                <ul class="selector-options" *ngIf="showYearMenu">
+                    <li *ngFor="let y of years" [class.active]="y === selectedYear"
+                        (click)="selectedYear = y; onYearChange(); showYearMenu = false">
+                        {{ y }} Analysis
+                    </li>
+                </ul>
+            </div>
+            <button class="btn-primary circle-btn" routerLink="/transactions">
+                <i class="bi bi-plus-lg"></i>
+            </button>
+        </div>
+    </header>
+
+    <section class="stats-grid main-stats">
+        <div class="glass-card stat-card main-balance">
+            <div class="balance-content">
+                <span class="label">Total Wallet Balance</span>
+                <h3 class="value">{{ totalBalance | currency:'INR':'symbol':'1.0-0' }}</h3>
+            </div>
+            <div class="mini-icon">
+                <i class="bi bi-wallet2"></i>
+            </div>
+        </div>
+    </section>
+
+    <div class="main-layout-grid">
+        <div class="left-column">
+            <!-- Calendar View -->
+            <section class="glass-card calendar-card">
+                <div class="calendar-header">
+                    <button (click)="changeMonth(-1)"><i class="bi bi-chevron-left"></i></button>
+                    <h4>{{ currentViewDate() | date:'MMMM yyyy' }}</h4>
+                    <button (click)="changeMonth(1)"><i class="bi bi-chevron-right"></i></button>
+                </div>
+                <div class="calendar-grid">
+                    <div class="weekday" *ngFor="let day of weekDays">{{ day }}</div>
+                    <div *ngFor="let day of calendarDays" class="calendar-day" [class.other-month]="!day.isCurrentMonth"
+                        [class.today]="day.isToday">
+                        <span class="day-num">{{ day.date | date:'d' }}</span>
+                        <div class="day-stats" *ngIf="day.income > 0 || day.expense > 0">
+                            <span class="day-inc" *ngIf="day.income > 0">+{{ day.income | number }}</span>
+                            <span class="day-exp" *ngIf="day.expense > 0">-{{ day.expense | number }}</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="stats-grid secondary-stats">
+                <div class="glass-card stat-card income">
+                    <span class="label">Selected Month Income</span>
+                    <h4 class="value text-success">+{{ monthlyIncome | currency:'INR':'symbol':'1.0-0' }}</h4>
+                </div>
+                <div class="glass-card stat-card expense">
+                    <span class="label">Selected Month Expense</span>
+                    <h4 class="value text-error">-{{ monthlyExpense | currency:'INR':'symbol':'1.0-0' }}</h4>
+                </div>
+                <div class="glass-card stat-card due">
+                    <span class="label">Active EMI Due</span>
+                    <h4 class="value text-warning">{{ monthlyDue | currency:'INR':'symbol':'1.0-0' }}</h4>
+                </div>
+            </section>
+        </div>
+
+        <div class="right-column">
+            <div class="charts-row">
+                <section class="chart-section glass-card">
+                    <div class="card-header">
+                        <h4>Yearly Trend</h4>
+                    </div>
+                    <div class="chart-container">
+                        <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" type="line"></canvas>
+                    </div>
+                </section>
+            </div>
+
+            <section class="glass-card recent-activity">
+                <div class="card-header">
+                    <h4>Recent Activity</h4>
+                    <a routerLink="/transactions" class="view-all">Logs</a>
+                </div>
+                <div class="transaction-list">
+                    <div *ngFor="let t of getRecentTransactions()" class="transaction-item">
+                        <div class="t-icon" [ngClass]="t.type">
+                            <i class="bi" [ngClass]="t.type === 'income' ? 'bi-link-45deg' : 'bi-dash-lg'"></i>
+                        </div>
+                        <div class="t-details">
+                            <span class="t-category">{{ t.category }}</span>
+                            <span class="t-date">{{ t.date | date:'MMM d' }}</span>
+                        </div>
+                        <div class="t-amount" [ngClass]="t.type">
+                            {{ t.type === 'income' ? '+' : '-' }}{{ t.amount | currency:'INR':'symbol':'1.0-0' }}
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

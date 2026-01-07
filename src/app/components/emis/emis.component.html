@@ -1,0 +1,147 @@
+<div class="page-container">
+    <header class="page-header">
+        <div class="header-info">
+            <h2 class="text-gradient">EMI Tracker</h2>
+            <p class="text-muted">Commitments for <strong>{{ selectedYear }}</strong></p>
+        </div>
+
+        <div class="header-actions">
+            <div class="custom-selector" (mouseleave)="showYearMenu = false">
+                <button class="selector-trigger" (click)="showYearMenu = !showYearMenu">
+                    {{ selectedYear }} Plans <i class="bi bi-chevron-down"></i>
+                </button>
+                <ul class="selector-options" *ngIf="showYearMenu">
+                    <li *ngFor="let y of years" [class.active]="y === selectedYear"
+                        (click)="selectedYear = y; showYearMenu = false">
+                        {{ y }} Plans
+                    </li>
+                </ul>
+            </div>
+            <button class="btn-primary" (click)="showAddForm = !showAddForm; editingEMI = null">
+                <i class="bi" [class.bi-x-lg]="showAddForm" [class.bi-plus-lg]="!showAddForm"></i>
+                <span>{{ showAddForm ? 'Cancel' : 'New EMI' }}</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Summary Card -->
+    <div class="glass-card summary-card" *ngIf="filteredEMIs.length > 0">
+        <div class="summary-item">
+            <span class="label">Yearly Commitment</span>
+            <h3 class="value">{{ getTotalYearlyCommitment() | currency:'INR':'symbol':'1.0-0' }}</h3>
+        </div>
+        <div class="summary-item">
+            <span class="label">Monthly Burden</span>
+            <h3 class="value">{{ getTotalYearlyCommitment() / 12 | currency:'INR':'symbol':'1.0-0' }}</h3>
+        </div>
+    </div>
+
+    <!-- Add Form -->
+    <div class="form-section if" *ngIf="showAddForm">
+        <div class="glass-card form-card animated-slide-up">
+            <h3>Set Up New EMI</h3>
+            <form (ngSubmit)="onSubmit()">
+                <div class="form-group">
+                    <label>Plan Name</label>
+                    <input type="text" [(ngModel)]="newEMI.name" name="name" required placeholder="Home/Car/Phone...">
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Total Loan</label>
+                        <input type="number" [(ngModel)]="newEMI.totalAmount" name="total" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Monthly EMI</label>
+                        <input type="number" [(ngModel)]="newEMI.monthlyAmount" name="monthly" required>
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" [ngModel]="newEMI.startDate | date:'yyyy-MM-dd'"
+                            (ngModelChange)="newEMI.startDate = $event" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tenure (Months)</label>
+                        <input type="number" [(ngModel)]="newEMI.durationMonths" name="tenure" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary full-width">Initialize Plan</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Form -->
+    <div class="form-section if" *ngIf="editingEMI">
+        <div class="glass-card form-card edit-card animated-slide-up">
+            <div class="card-title">
+                <i class="bi bi-pencil-fill"></i>
+                <h3>Edit Plan: {{ editingEMI.name }}</h3>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Months Paid</label>
+                    <input type="number" [(ngModel)]="editingEMI.paidMonths">
+                </div>
+                <div class="form-group">
+                    <label>Total Tenure</label>
+                    <input type="number" [(ngModel)]="editingEMI.durationMonths">
+                </div>
+            </div>
+            <div class="btn-row">
+                <button class="btn-primary" (click)="saveEdit()">Save Plan</button>
+                <button class="btn-secondary" (click)="editingEMI = null">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EMI List -->
+    <div class="emi-grid">
+        <div *ngFor="let emi of filteredEMIs" class="glass-card emi-card">
+            <div class="card-header">
+                <div class="plan-info">
+                    <h4>{{ emi.name }}</h4>
+                    <span class="category-badge">{{ emi.category }}</span>
+                </div>
+                <div class="total-val">{{ emi.totalAmount | currency:'INR':'symbol':'1.0-0' }}</div>
+            </div>
+
+            <div class="progress-section">
+                <div class="progress-labels">
+                    <span>{{ emi.paidMonths }} / {{ emi.durationMonths }} months</span>
+                    <span>{{ getProgressPercentage(emi) | number:'1.0-0' }}%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" [style.width.%]="getProgressPercentage(emi)"></div>
+                </div>
+            </div>
+
+            <div class="meta-row">
+                <div class="meta">
+                    <span class="label">Monthly</span>
+                    <span class="val">{{ emi.monthlyAmount | currency:'INR':'symbol':'1.0-0' }}</span>
+                </div>
+                <div class="meta text-right">
+                    <span class="label">Remaining</span>
+                    <span class="val">{{ getRemainingMonths(emi) * emi.monthlyAmount | currency:'INR':'symbol':'1.0-0'
+                        }}</span>
+                </div>
+            </div>
+
+            <div class="card-actions">
+                <button class="btn-action pay" (click)="updateProgress(emi, 1)">
+                    <i class="bi bi-check-lg"></i> Pay Month
+                </button>
+                <div class="sub-actions">
+                    <button class="btn-icon-sm" (click)="startEdit(emi)"><i class="bi bi-pencil"></i></button>
+                    <button class="btn-icon-sm delete" (click)="deleteEMI(emi.id)"><i class="bi bi-trash"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="filteredEMIs.length === 0" class="empty-state">
+        <i class="bi bi-calendar-x" style="font-size: 3rem; opacity: 0.2; margin-bottom: 1rem;"></i>
+        <p>No active EMI plans for <strong>{{ selectedYear }}</strong>.</p>
+    </div>
+</div>

@@ -1,0 +1,228 @@
+.page-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.edit-card {
+    border: 1px solid var(--primary);
+    padding: 1.5rem;
+}
+
+.card-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+    color: var(--primary);
+}
+
+.category-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.chip {
+    padding: 0.4rem 0.8rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    color: #f8fafc;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    text-transform: capitalize;
+}
+
+.chip.selected {
+    background: rgba(99, 102, 241, 0.1);
+    border-color: var(--primary);
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 0.4rem;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.currency {
+    position: absolute;
+    left: 0.75rem;
+    color: var(--primary);
+    font-weight: 700;
+}
+
+input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    color: white;
+}
+
+.input-wrapper input {
+    padding-left: 1.75rem;
+}
+
+.btn-row {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.transaction-history {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.transaction-card {
+    padding: 1rem 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--glass-border);
+    transition: all 0.2s;
+}
+
+.transaction-card:hover {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.t-main {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1.5rem;
+    flex: 1;
+}
+
+.t-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    flex: 1;
+}
+
+.t-header-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.t-badge {
+    padding: 0.2rem 0.6rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: capitalize;
+    color: var(--text-main);
+}
+
+.t-date {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.t-note {
+    font-size: 0.85rem;
+    margin: 0.2rem 0;
+    opacity: 0.6;
+}
+
+.t-amount {
+    font-size: 1.15rem;
+    font-weight: 800;
+    min-width: 100px;
+    text-align: right;
+}
+
+.income .t-amount {
+    color: #10b981;
+}
+
+.expense .t-amount {
+    color: #ef4444;
+}
+
+.t-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: 1rem;
+}
+
+.btn-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--glass-border);
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.btn-icon:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.edit:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.delete:hover {
+    color: #f43f5e;
+    border-color: #f43f5e;
+}
+
+@media (max-width: 600px) {
+    .transaction-card {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1.25rem;
+    }
+
+    .t-main {
+        width: 100%;
+        margin-bottom: 0.75rem;
+    }
+
+    .t-actions {
+        margin-left: 0;
+        width: 100%;
+        justify-content: flex-end;
+        padding-top: 0.75rem;
+        border-top: 1px dotted var(--glass-border);
+    }
+}
